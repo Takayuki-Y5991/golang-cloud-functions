@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -15,11 +16,9 @@ type Model struct {
 	Email    string `json:"email"`
 }
 
-const URL = "https://jsonplaceholder.typicode.com/users/"
-
 func Fetch(customerId int) (Model, error) {
 	var generatedURL strings.Builder
-	generatedURL.WriteString(URL)
+	generatedURL.WriteString(os.Getenv("DUMMY_API_URI"))
 	generatedURL.WriteString(strconv.Itoa(customerId))
 	resp, err := http.Get(generatedURL.String())
 	if err != nil {
