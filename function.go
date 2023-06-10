@@ -61,16 +61,23 @@ func transformEmail(email string) string {
 	return email[:index] + "@example.com"
 }
 
-func processTransform(res []api.Model) []api.Model {
-	data := make([]api.Model, 0, 10)
+func processTransform(res []api.Model) []api.EmailModel {
+	data := make([]api.EmailModel, 0, 10)
 	for _, v := range res {
-		data = append(data, api.Model{
-			Id:       v.Id,
+		data = append(data, api.EmailModel{
 			Username: v.Username,
 			Email:    transformEmail(v.Email),
 		})
 	}
 	return data
+}
+
+func processSendMail(data []api.EmailModel) error {
+	err := api.SendEmail(data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func batch() {
@@ -80,5 +87,9 @@ func batch() {
 		return
 	}
 	data := processTransform(res)
-	log.Println(data)
+
+	err = processSendMail(data)
+	if err != nil {
+		log.Println(err)
+	}
 }

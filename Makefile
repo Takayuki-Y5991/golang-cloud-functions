@@ -7,3 +7,7 @@ deploy:
 	gcloud functions deploy SendGrindFunction \
 	--runtime go120 \
 	--trigger-http
+
+.PHONY: call
+call:
+	curl localhost:8080 -v
